@@ -5,7 +5,7 @@ import { PriorityDto } from './create-todo.dto';
 export class ListTodoDto {
   @IsOptional()
   @IsEnum(PriorityDto)
-  priority?: PriorityDto;
+  prioridad?: PriorityDto;
 
   @IsOptional()
   @Transform(({ value }) => {
@@ -14,7 +14,7 @@ export class ListTodoDto {
     return value;
   })
   @IsBoolean()
-  completed?: boolean;
+  finalizada?: boolean;
 
   @IsOptional()
   @Transform(({ value }) => Number(value))

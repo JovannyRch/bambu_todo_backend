@@ -10,10 +10,13 @@ http:
     type: json
     data: |-
       {
-        "email": "test@mail.com",
+        "email": "test2@mail.com",
+        "nombre": "usuario de prueba",
         "password": "123456"
       }
-  auth: inherit
+  auth:
+    type: bearer
+    token: "{{token}}"
 
 settings:
   encodeUrl: true

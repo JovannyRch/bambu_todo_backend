@@ -9,7 +9,7 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
-  create(data: { email: string; password: string }) {
+  create(data: { nombre: string; email: string; password: string }) {
     return this.prisma.user.create({ data });
   }
 }

@@ -15,7 +15,7 @@ export class AuthService {
   ) {}
 
   async register(dto: any) {
-    const { email, password } = dto;
+    const { nombre, email, password } = dto;
 
     const exists = await this.usersService.findByEmail(email);
     if (exists) throw new BadRequestException('EMAIL_ALREADY_EXISTS');
@@ -23,6 +23,7 @@ export class AuthService {
     const hash = await bcrypt.hash(password, 10);
 
     const user = await this.usersService.create({
+      nombre,
       email,
       password: hash,
     });
@@ -45,6 +46,7 @@ export class AuthService {
   private async generateToken(user: any) {
     const payload = {
       sub: user.id,
+      nombre: user.nombre,
       email: user.email,
     };
 
@@ -54,6 +56,7 @@ export class AuthService {
       access_token,
       user: {
         id: user.id,
+        nombre: user.nombre,
         email: user.email,
       },
     };

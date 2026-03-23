@@ -10,13 +10,13 @@ http:
     type: json
     data: |-
       {
-        "title": "Hacer prueba técnica",
-        "description": "Terminar backend hoy",
-        "priority": "alta"
+        "nombre": "task 1",
+        "descripcion": "task description",
+        "prioridad": "alta"
       }
   auth:
     type: bearer
-    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5NGFhZDgzYi0wODljLTRhNmQtYTA2ZS1lODIzMThhMjhkMzkiLCJlbWFpbCI6InRlc3RAbWFpbC5jb20iLCJpYXQiOjE3NzQxMDgzNzQsImV4cCI6MTc3NDE5NDc3NH0.RyoKkNiAmG-YTJk-zwm3LfZ8nYRTJP87qG5lZ_TnQ1I
+    token: "{{token}}"
 
 settings:
   encodeUrl: true

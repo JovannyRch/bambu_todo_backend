@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma, Priority } from '@prisma/client';
 import { CreateTodoDto } from './dto/create-todo.dto';
@@ -12,10 +16,10 @@ export class TodoService {
   async create(userId: string, createTodoDto: CreateTodoDto) {
     const todo = await this.prisma.todo.create({
       data: {
-        title: createTodoDto.title,
-        description: createTodoDto.description,
-        priority: createTodoDto.priority as Priority,
-        completed: createTodoDto.completed ?? false,
+        nombre: createTodoDto.nombre,
+        descripcion: createTodoDto.descripcion,
+        prioridad: createTodoDto.prioridad as Priority,
+        finalizada: createTodoDto.finalizada ?? false,
         userId,
       },
     });
@@ -31,25 +35,48 @@ export class TodoService {
     const page = query.page ?? 1;
     const limit = Math.min(query.limit ?? 10, 50);
     const skip = (page - 1) * limit;
+    const reportWhere: Prisma.TodoWhereInput = { userId };
 
     const where: Prisma.TodoWhereInput = {
-      userId,
-      ...(query.priority ? { priority: query.priority as Priority } : {}),
-      ...(typeof query.completed === 'boolean' ? { completed: query.completed } : {}),
+      ...reportWhere,
+      ...(query.prioridad ? { prioridad: query.prioridad as Priority } : {}),
+      ...(typeof query.finalizada === 'boolean'
+        ? { finalizada: query.finalizada }
+        : {}),
     };
 
-    const [items, total] = await Promise.all([
+    const [items, total, completedCount, pendingCount] = await Promise.all([
       this.prisma.todo.findMany({
         where,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { fechaCreacion: 'desc' },
         skip,
         take: limit,
       }),
       this.prisma.todo.count({ where }),
+      this.prisma.todo.count({
+        where: { ...reportWhere, finalizada: true },
+      }),
+      this.prisma.todo.count({
+        where: { ...reportWhere, finalizada: false },
+      }),
     ]);
 
     return {
       data: items,
+      report: {
+        totalTodos: completedCount + pendingCount,
+        completedTodos: completedCount,
+        pendingTodos: pendingCount,
+        completionRate:
+          completedCount + pendingCount === 0
+            ? 0
+            : Number(
+                (
+                  (completedCount / (completedCount + pendingCount)) *
+                  100
+                ).toFixed(2),
+              ),
+      },
       meta: {
         total,
         page,
@@ -93,13 +120,13 @@ export class TodoService {
     const updatedTodo = await this.prisma.todo.update({
       where: { id },
       data: {
-        ...(updateTodoDto.title !== undefined && { title: updateTodoDto.title }),
-        ...(updateTodoDto.description !== undefined && { description: updateTodoDto.description }),
-        ...(updateTodoDto.priority !== undefined && {
-          priority: updateTodoDto.priority as Priority,
+        ...(updateTodoDto.nombre !== undefined && { nombre: updateTodoDto.nombre }),
+        ...(updateTodoDto.descripcion !== undefined && { descripcion: updateTodoDto.descripcion }),
+        ...(updateTodoDto.prioridad !== undefined && {
+          prioridad: updateTodoDto.prioridad as Priority,
         }),
-        ...(updateTodoDto.completed !== undefined && {
-          completed: updateTodoDto.completed,
+        ...(updateTodoDto.finalizada !== undefined && {
+          finalizada: updateTodoDto.finalizada,
         }),
       },
     });

@@ -4,10 +4,11 @@ CREATE TYPE "Priority" AS ENUM ('baja', 'media', 'alta');
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
+    "nombre" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "fechaCreacion" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "fechaActualizacion" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -15,13 +16,13 @@ CREATE TABLE "users" (
 -- CreateTable
 CREATE TABLE "todos" (
     "id" TEXT NOT NULL,
-    "title" TEXT NOT NULL,
-    "description" TEXT,
-    "priority" "Priority" NOT NULL,
-    "completed" BOOLEAN NOT NULL DEFAULT false,
+    "nombre" TEXT NOT NULL,
+    "descripcion" TEXT,
+    "prioridad" "Priority" NOT NULL,
+    "finalizada" BOOLEAN NOT NULL DEFAULT false,
     "userId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "fechaCreacion" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "fechaActualizacion" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "todos_pkey" PRIMARY KEY ("id")
 );

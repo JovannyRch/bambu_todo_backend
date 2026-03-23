@@ -9,17 +9,17 @@ export enum PriorityDto {
 export class CreateTodoDto {
   @IsString()
   @MinLength(1)
-  title: string;
+  nombre: string;
 
   @IsOptional()
   @IsString()
   @MaxLength(500)
-  description?: string;
+  descripcion?: string;
 
   @IsEnum(PriorityDto)
-  priority: PriorityDto;
+  prioridad: PriorityDto;
 
   @IsOptional()
   @IsBoolean()
-  completed?: boolean;
+  finalizada?: boolean;
 }
